@@ -1,0 +1,28 @@
+﻿@using System.Net.Mime
+@using Meetinger.Areas.Identity.Data
+@model Meeting
+@{
+    ViewData["Name"] = "Meeting";
+}
+<h1>scheduled meeting</h1>
+<dl>
+    <dt>Id</dt>
+    <dd>@Model.MeetingTime</dd>
+    <dt>Data</dt>
+    <dd>@Model.EndTime</dd>
+   
+    <dd>@Model.Name</dd>
+    
+    <dd>@Model.Description</dd>
+    
+   
+    
+    
+</dl>
+@foreach (var user in Model.Participants)
+{
+        <h1>
+            @user.Participant.FirstName
+        </h1>
+}
+<p>@Model.Creator.UserName</p>

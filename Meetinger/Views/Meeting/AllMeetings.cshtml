@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Meeting>
+@{
+    ViewData["Name"] = "Meeting";
+}
+<h1>All meetings</h1>
+@foreach (var meeting in Model)
+{
+    <h2>Meeting</h2>
+    <h5>
+        @meeting.Name
+    </h5>
+    <h5>
+        @meeting.Description
+    </h5>
+    <h5>
+        @meeting.MeetingTime
+    </h5>
+    <h5>
+        @meeting.MeetingTime
+    </h5>
+    <h5>
+        @meeting.Creator.FirstName
+    </h5>
+
+     <h2>Meeting user</h2>
+        @foreach (var user in meeting.Participants)
+    {
+       
+        <h5>
+            @user.Participant.FirstName
+        </h5>
+    }
+
+}
