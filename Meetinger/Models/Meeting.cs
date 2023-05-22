@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Meetinger.Areas.Identity.Data;
-using Microsoft.AspNetCore.Mvc.Rendering;
+
 
 namespace Meetinger.Models
 {

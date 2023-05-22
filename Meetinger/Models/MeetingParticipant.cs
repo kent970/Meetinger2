@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Meetinger.Areas.Identity.Data;
 
+
 namespace Meetinger.Models
 {
     public class MeetingParticipant
@@ -12,6 +13,7 @@ namespace Meetinger.Models
         public Guid MeetingId { get; set; }
         [ForeignKey("MeetingId")]
         public Meeting Meeting { get; set; }
+        public bool AttendanceStatus { get; set; }
 
     }
 }

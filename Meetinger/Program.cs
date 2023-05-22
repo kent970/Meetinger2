@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Meetinger.Areas.Identity.Data;
 using Meetinger.Services;
+using Meetinger.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
@@ -15,6 +16,9 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IMeeting, MeetingService>();
+builder.Services.AddScoped<List<Notification>>(_ => new List<Notification>());
+builder.Services.AddScoped<INotification, NotificationService>();
+
 
 var app = builder.Build();
 
