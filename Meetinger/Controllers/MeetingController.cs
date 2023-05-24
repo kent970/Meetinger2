@@ -59,6 +59,7 @@ namespace Meetinger.Controllers
                 Participants = ThisParticipants,
                 Name = meeting.Name,
                 Description = meeting.Description,
+                IsCanceled = false
             };
             foreach (var participant in ThisParticipants)
             {
@@ -113,7 +114,7 @@ namespace Meetinger.Controllers
         {
             var userId = _userManager.GetUserId(User);
             var user = await _userManager.FindByIdAsync(userId);
-            var myMeetings = _meetingService.GetByParticipant(user);
+            var myMeetings = _meetingService.GetByUser(user);
             return View(myMeetings);
         }
 
@@ -138,6 +139,38 @@ namespace Meetinger.Controllers
             int? mwe = null;
             meetingAttendant.AttendanceStatus = attendance;
             await _context.SaveChangesAsync();
+        }
+
+        public async Task CancelMeeting(Guid meetingId)
+        {
+            await _meetingService.CancelMeeting(meetingId);
+        }
+
+        public IActionResult UpdateMeeting(Guid id)
+        {
+            
+
+            var view = _meetingService.GetById(id);
+           view.AvailableUsers = _context.Users.ToList();
+            return View(view);
+        }
+        [HttpPost]
+        public async Task UpdateMeetingTask(Guid Id,Meeting meeting,List<string> selectedUsers)
+        {
+            var ThisParticipants = new List<MeetingParticipant>();
+            foreach (var userI in selectedUsers)
+            {
+                var participant = new MeetingParticipant
+                {
+                    ParticipantId = userI,
+                    Participant = await _userManager.FindByIdAsync(userI),
+                    Meeting = meeting,
+                    MeetingId = meeting.Id
+                };
+                ThisParticipants.Add(participant);
+                meeting.Participants = ThisParticipants;
+            }
+            await _meetingService.Update(Id, meeting);
         }
     }
 }

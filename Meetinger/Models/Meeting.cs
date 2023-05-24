@@ -18,5 +18,7 @@ namespace Meetinger.Models
         public List<MeetingParticipant> Participants { get; set; }
 
         public List<ApplicationUser> AvailableUsers { get; set; }
+        [Required]
+        public bool IsCanceled { get; set; }
     }
 }

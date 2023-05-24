@@ -1,5 +1,6 @@
 ﻿@using Meetinger.Areas.Identity.Data
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Http
 @model IEnumerable<Meeting>
 @inject UserManager<ApplicationUser> UserManager
 
@@ -8,31 +9,51 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>MyMeetings</h1>
+
 
 @foreach (var meeting in Model)
 {
-    <h2>Meeting</h2>
-    <h5>@meeting.Name</h5>
-    <h5>@meeting.Description</h5>
-    <h5>@meeting.MeetingTime</h5>
-    <h5>@meeting.Creator.FirstName</h5>
-    
-    <div>
-        <input type="radio" class="form-check-input add-button"  name="selectedUser" value="false" data-meeting-id="@meeting.Id">
-        <label class="form-check-label">No</label>
-    </div>
-    <div>
-        <input type="radio" class="form-check-input add-button"  name="selectedUser" value="true" data-meeting-id="@meeting.Id">
-        <label class="form-check-label" >Yes</label>
-    </div>
-    
+    if (meeting.IsCanceled == false)
+    {
+        if (meeting.Creator.Email == Context.User.Identity.Name)
+        {
+            <h1>Creator meeting</h1>
+        }
+        else
+        {
+            <h1>Participant meeting</h1>
+        }
+
+        <h2>Meeting</h2>
+        <h5>@meeting.Name</h5>
+        <h5>@meeting.Description</h5>
+        <h5>@meeting.MeetingTime</h5>
+        <h5>@meeting.Creator.FirstName</h5>
+        if (meeting.Creator.Email == Context.User.Identity.Name)
+        {
+            <button class="btn btn-outline-primary mx-2 delete-button" data-meeting-id="@meeting.Id">anuluj spotkanie</button>
+            @Html.ActionLink("Updatuj meeting", "UpdateMeeting", new { id = meeting.Id })
+
+
+        }
+        else
+        {
+            <div>
+                <input type="radio" class="form-check-input add-button" name="selectedUser" value="false" data-meeting-id="@meeting.Id">
+                <label class="form-check-label">No</label>
+            </div>
+            <div>
+                <input type="radio" class="form-check-input add-button" name="selectedUser" value="true" data-meeting-id="@meeting.Id">
+                <label class="form-check-label">Yes</label>
+            </div>
+        }
+    }
 }
 
 @section Scripts
-    {
+{
     <script>
-        $(".add-button").click(function () {
+        $(".add-button").click(function() {
             var attendanceValue = $(this).val();
             var meetingId = $(this).data("meeting-id");
 
@@ -43,13 +64,27 @@
                     attendance: attendanceValue,
                     meetingId: meetingId
                 },
-                success: function () {
+                success: function() {
                     alert("Attendance set successfully");
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function(jqXHR, textStatus, errorThrown) {
                     console.log("Ajax request error:");
                     console.log("Status: " + textStatus);
                     console.log("Error: " + errorThrown);
+                }
+            });
+        });
+        $(".delete-button").click(function() {
+            var meetingId = $(this).data("meeting-id");
+            $.ajax({
+                type: "POST",
+                url: "/Meeting/CancelMeeting",
+                data: { meetingId: meetingId },
+                success: function() {
+                    alert("Meeting canceled");
+                },
+                error: function() {
+                    alert("error!");
                 }
             });
         });

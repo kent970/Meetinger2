@@ -31,17 +31,13 @@ namespace Meetinger.Services
 
         public IEnumerable<Meeting> GetByUser(ApplicationUser user)
         {
-            // IEnumerable<Meeting> ParticipantMeetings = _context.Meetings.Where(meeting => meeting.Participants.)
-            //
-            //
-            //     IEnumerable<Meeting> userMeets
-            return _context.Meetings.Where(meeting => meeting.Creator == user);
-        }
+            var creatorMeeting = _context.Meetings.Include(m => m.Creator).Where(m => m.Creator == user);
 
-        public IEnumerable<Meeting> GetByParticipant(ApplicationUser participant)
-        {
-            return _context.Participants.Include(mp => mp.Participant).Where(mp => mp.ParticipantId == participant.Id)
-                .Include(mp => mp.Meeting).ThenInclude(mp => mp.Creator).Select(mp => mp.Meeting).ToList();
+            var participantMeetings =_context.Participants.Include(mp => mp.Participant).Where(mp => mp.ParticipantId == user.Id)
+                .Include(mp => mp.Meeting).ThenInclude(mp => mp.Creator).Select(mp => mp.Meeting);
+
+            var combined = creatorMeeting.Concat(participantMeetings).ToList();
+            return combined;
         }
 
         public IEnumerable<Meeting> GetFiltered(string searchQuery)
@@ -55,6 +51,24 @@ namespace Meetinger.Services
         public IEnumerable<Meeting> GetLatest(int n)
         {
             return GetAll().OrderByDescending(meeting => meeting.MeetingTime).Take(n);
+        }
+
+        public async Task CancelMeeting(Guid meetingId)
+        {
+            var meetingToCancel = await _context.Meetings.FirstOrDefaultAsync(m => m.Id == meetingId);
+
+            if (meetingToCancel != null)
+            {
+                meetingToCancel.IsCanceled = true;
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                // Handle case when meeting is not found
+                // For example, throw an exception or return an error message
+                throw new Exception("Meeting not found.");
+            }
+
         }
 
         public Task AddParticipant(Meeting meeting, ApplicationUser user)
@@ -74,6 +88,19 @@ namespace Meetinger.Services
             }
 
             return null;
+        }
+
+        public async Task Update(Guid id, Meeting meeting)
+        {
+            var meetingToUpdate = _context.Meetings.FirstOrDefault(m => m.Id == id);
+            
+            //AutoMapper
+            meetingToUpdate.Participants = meeting.Participants;
+            meetingToUpdate.Name = meeting.Name;
+            meetingToUpdate.Description = meeting.Description;
+            meetingToUpdate.MeetingTime = meeting.MeetingTime;
+            meetingToUpdate.EndTime = meeting.EndTime;
+            _context.SaveChanges();
         }
     }
 }
