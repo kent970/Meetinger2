@@ -31,13 +31,9 @@ namespace Meetinger.Services
 
         public IEnumerable<Meeting> GetByUser(ApplicationUser user)
         {
-            var creatorMeeting = _context.Meetings.Include(m => m.Creator).Where(m => m.Creator == user);
-
-            var participantMeetings =_context.Participants.Include(mp => mp.Participant).Where(mp => mp.ParticipantId == user.Id)
-                .Include(mp => mp.Meeting).ThenInclude(mp => mp.Creator).Select(mp => mp.Meeting);
-
-            var combined = creatorMeeting.Concat(participantMeetings).ToList();
-            return combined;
+            var meetings = _context.Meetings.Include(m => m.Participants).ThenInclude(p => p.Participant)
+                .Where(m => m.Participants.Any(mp => mp.Participant == user)).ToList();
+            return meetings;
         }
 
         public IEnumerable<Meeting> GetFiltered(string searchQuery)
@@ -64,11 +60,8 @@ namespace Meetinger.Services
             }
             else
             {
-                // Handle case when meeting is not found
-                // For example, throw an exception or return an error message
                 throw new Exception("Meeting not found.");
             }
-
         }
 
         public Task AddParticipant(Meeting meeting, ApplicationUser user)
@@ -93,14 +86,14 @@ namespace Meetinger.Services
         public async Task Update(Guid id, Meeting meeting)
         {
             var meetingToUpdate = _context.Meetings.FirstOrDefault(m => m.Id == id);
-            
+
             //AutoMapper
             meetingToUpdate.Participants = meeting.Participants;
             meetingToUpdate.Name = meeting.Name;
             meetingToUpdate.Description = meeting.Description;
             meetingToUpdate.MeetingTime = meeting.MeetingTime;
             meetingToUpdate.EndTime = meeting.EndTime;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -47,6 +47,13 @@ namespace Meetinger.Controllers
                 };
                 ThisParticipants.Add(participant);
             }
+            ThisParticipants.Add(new MeetingParticipant
+            {
+                ParticipantId = user.Id,
+                Participant = user,
+                Meeting = meeting,
+                MeetingId = meeting.Id
+            });
 
 
             var createdMeeting = new Meeting
@@ -65,7 +72,7 @@ namespace Meetinger.Controllers
             {
                 var newMeetingNotification = new Notification
                 {
-                   // NotiId = Guid.NewGuid(),
+                    // NotiId = Guid.NewGuid(),
                     FromUserId = user.Id,
                     ToUserId = participant.ParticipantId,
                     NotiHeader = "New meeting",
@@ -76,7 +83,6 @@ namespace Meetinger.Controllers
                     Message = "New invitation for meeting",
                     FromUserName = user.FirstName,
                     ToUserName = participant.Participant.FirstName
-
                 };
                 await _notificationService.AddNotification(newMeetingNotification);
             }
@@ -130,12 +136,12 @@ namespace Meetinger.Controllers
             return View(viewModel);
         }
 
-        public async Task SetAttendance(bool attendance,Guid meetingId)
+        public async Task SetAttendance(bool attendance, Guid meetingId)
         {
             var userId = _userManager.GetUserId(User);
             var user = await _userManager.FindByIdAsync(userId);
             var meeting = _meetingService.GetById(meetingId);
-            var meetingAttendant = _meetingService.GetMeetingAttendant(meeting,user);
+            var meetingAttendant = _meetingService.GetMeetingAttendant(meeting, user);
             int? mwe = null;
             meetingAttendant.AttendanceStatus = attendance;
             await _context.SaveChangesAsync();
@@ -148,28 +154,35 @@ namespace Meetinger.Controllers
 
         public IActionResult UpdateMeeting(Guid id)
         {
-            
-
             var view = _meetingService.GetById(id);
-           view.AvailableUsers = _context.Users.ToList();
+            view.AvailableUsers = _context.Users.ToList();
             return View(view);
         }
+
         [HttpPost]
-        public async Task UpdateMeetingTask(Guid Id,Meeting meeting,List<string> selectedUsers)
+        public async Task UpdateMeetingTask(Guid Id, Meeting meeting, List<string> selectedUsers)
         {
             var ThisParticipants = new List<MeetingParticipant>();
             foreach (var userI in selectedUsers)
             {
-                var participant = new MeetingParticipant
                 {
-                    ParticipantId = userI,
-                    Participant = await _userManager.FindByIdAsync(userI),
-                    Meeting = meeting,
-                    MeetingId = meeting.Id
-                };
-                ThisParticipants.Add(participant);
-                meeting.Participants = ThisParticipants;
+                    var participant = new MeetingParticipant
+                    {
+                        ParticipantId = userI,
+                        Participant = await _userManager.FindByIdAsync(userI),
+                        Meeting = meeting,
+                        MeetingId = meeting.Id
+                    };
+                    ThisParticipants.Add(participant);
+                    if (meeting.Participants != null)
+                    {
+                        meeting.Participants.Clear();
+                    }
+
+                    meeting.Participants = ThisParticipants;
+                }
             }
+
             await _meetingService.Update(Id, meeting);
         }
     }

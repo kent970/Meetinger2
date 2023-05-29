@@ -9,44 +9,67 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
-
 @foreach (var meeting in Model)
 {
     if (meeting.IsCanceled == false)
     {
-        if (meeting.Creator.Email == Context.User.Identity.Name)
-        {
-            <h1>Creator meeting</h1>
-        }
-        else
-        {
-            <h1>Participant meeting</h1>
-        }
-
-        <h2>Meeting</h2>
-        <h5>@meeting.Name</h5>
-        <h5>@meeting.Description</h5>
-        <h5>@meeting.MeetingTime</h5>
-        <h5>@meeting.Creator.FirstName</h5>
-        if (meeting.Creator.Email == Context.User.Identity.Name)
-        {
-            <button class="btn btn-outline-primary mx-2 delete-button" data-meeting-id="@meeting.Id">anuluj spotkanie</button>
-            @Html.ActionLink("Updatuj meeting", "UpdateMeeting", new { id = meeting.Id })
-
-
-        }
-        else
-        {
-            <div>
-                <input type="radio" class="form-check-input add-button" name="selectedUser" value="false" data-meeting-id="@meeting.Id">
-                <label class="form-check-label">No</label>
+        <div class="meeting-container">
+            <div class="meeting-title">
+                @if (meeting.Creator.Email == Context.User.Identity.Name)
+                {
+                    <span>Creator meeting</span>
+                }
+                else
+                {
+                    <span>Participant meeting</span>
+                }
             </div>
-            <div>
-                <input type="radio" class="form-check-input add-button" name="selectedUser" value="true" data-meeting-id="@meeting.Id">
-                <label class="form-check-label">Yes</label>
+
+            <div class="meeting-details">
+                <h2>Meeting</h2>
+                <h5>@meeting.Name</h5>
+                <p>@meeting.Description</p>
+                <p>@meeting.MeetingTime</p>
             </div>
-        }
+
+            <div class="meeting-participants">
+                @if (meeting.Participants != null)
+                {
+                    <p>
+                        @foreach (var mp in meeting.Participants)
+                        {
+                            if (mp.Participant.Email == Context.User.Identity.Name)
+                            {
+                                <span>Creator: @meeting.Creator.FirstName</span>
+                            }
+                            else
+                            {
+                                <span>@mp.Participant.FirstName</span>
+                            }
+                        }
+                    </p>
+                }
+            </div>
+
+            <div class="meeting-actions">
+                @if (meeting.Creator.Email == Context.User.Identity.Name)
+                {
+                    <button class="btn btn-outline-primary delete-button" data-meeting-id="@meeting.Id">Cancel meeting</button>
+                    @Html.ActionLink("Update meeting", "UpdateMeeting", new { id = meeting.Id }, new { @class = "btn btn-primary" })
+                }
+                else
+                {
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input add-button" name="selectedUser" value="false" data-meeting-id="@meeting.Id">
+                        <label class="form-check-label">No</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input add-button" name="selectedUser" value="true" data-meeting-id="@meeting.Id">
+                        <label class="form-check-label">Yes</label>
+                    </div>
+                }
+            </div>
+        </div>
     }
 }
 

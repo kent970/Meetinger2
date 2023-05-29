@@ -4,25 +4,26 @@
 @{
     ViewData["Name"] = "Meeting";
 }
-<h1>scheduled meeting</h1>
+
+
+<h1>Scheduled Meeting</h1>
+
 <dl>
     <dt>Id</dt>
     <dd>@Model.MeetingTime</dd>
     <dt>Data</dt>
     <dd>@Model.EndTime</dd>
-   
+    <dt>Name</dt>
     <dd>@Model.Name</dd>
-    
+    <dt>Description</dt>
     <dd>@Model.Description</dd>
-    
-   
-    
-    
 </dl>
+
 @foreach (var user in Model.Participants)
 {
-        <h1>
-            @user.Participant.FirstName
-        </h1>
+    <div class="participant-name">
+        @user.Participant.FirstName
+    </div>
 }
-<p>@Model.Creator.UserName</p>
+
+<p class="creator-username">@Model.Creator.UserName</p>

@@ -1,31 +1,33 @@
 ﻿@model Meeting
-<h1>Create new meeting</h1>
+
+<h1>Create New Meeting</h1>
+
 @if (User.Identity.IsAuthenticated)
 {
     <div class="row">
         <form asp-action="CreateMeeting" method="post" id="addPostForm">
             <div class="form-group">
-                <label asp-for="MeetingTime"></label>
-                <input asp-for="MeetingTime" class="form-control"/>
+                <label asp-for="MeetingTime">Meeting Time</label>
+                <input asp-for="MeetingTime" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="EndTime"></label>
-                <input asp-for="EndTime" class="form-control"/>
+                <label asp-for="EndTime">End Time</label>
+                <input asp-for="EndTime" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="Name"></label>
+                <label asp-for="Name">Name</label>
                 <textarea asp-for="Name" class="form-control"></textarea>
             </div>
             <div class="form-group">
-                <label asp-for="Description"></label>
+                <label asp-for="Description">Description</label>
                 <textarea asp-for="Description" class="form-control"></textarea>
-                <input asp-for="Id" type="hidden"/>
+                <input asp-for="Id" type="hidden" />
             </div>
             <div class="form-group">
-                <label asp-for="AvailableUsers"></label>
+                <label asp-for="AvailableUsers">Available Users</label>
                 @foreach (var user in Model.AvailableUsers)
                 {
-                    <div>
+                    <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="@user.Id" name="selectedUsers" value="@user.Id">
                         <label class="form-check-label" for="@user.Id">@user.FirstName</label>
                     </div>
@@ -34,11 +36,9 @@
 
             <button type="submit" id="submitPostBtn" class="btn btn-danger">Submit Meeting</button>
         </form>
-
     </div>
 }
-
 else
 {
-    <h1>please log in</h1>
+    <h1>Please log in</h1>
 }

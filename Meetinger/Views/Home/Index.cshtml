@@ -1,8 +1,39 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@* @inherits System.Web.Mvc.WebViewPage *@
+@* @{ *@
+@*     Layout = null; *@
+@* } *@
+@{
+    ViewData["Title"] = "Privacy Policy";
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h1>@ViewData["Title"]</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>MVC React App</title>
+</head>
+<body style="height:100%">
+<noscript>You need to enable JavaScript to run this app.</noscript>
+<div id="root"></div>
+<script src="/React/dist/bundle.js"></script>
+<script id="__bs_script__">//<![CDATA[
+    (function() {
+        try {
+            var script = document.createElement('script');
+            if ('async') {
+                script.async = true;
+            }
+            script.src = 'http://HOST:3000/browser-sync/browser-sync-client.js?v=2.29.3'.replace("HOST", location.hostname);
+            if (document.body) {
+                document.body.appendChild(script);
+            } else if (document.head) {
+                document.head.appendChild(script);
+            }
+        } catch (e) {
+            console.error("Browsersync: could not append script tag", e);
+        }
+    })()
+//]]></script>
+</body>
+</html>
