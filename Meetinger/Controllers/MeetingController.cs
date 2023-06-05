@@ -1,4 +1,6 @@
-﻿using Meetinger.Areas.Identity.Data;
+﻿using System.Net;
+using System.Net.Mail;
+using Meetinger.Areas.Identity.Data;
 using Meetinger.Models;
 using Meetinger.Services;
 using Microsoft.AspNetCore.Identity;
@@ -25,6 +27,7 @@ namespace Meetinger.Controllers
 
         public IActionResult Index()
         {
+            
             return View();
         }
 
@@ -47,6 +50,7 @@ namespace Meetinger.Controllers
                 };
                 ThisParticipants.Add(participant);
             }
+
             ThisParticipants.Add(new MeetingParticipant
             {
                 ParticipantId = user.Id,
@@ -70,21 +74,10 @@ namespace Meetinger.Controllers
             };
             foreach (var participant in ThisParticipants)
             {
-                var newMeetingNotification = new Notification
+                if (participant.Participant != user)
                 {
-                    // NotiId = Guid.NewGuid(),
-                    FromUserId = user.Id,
-                    ToUserId = participant.ParticipantId,
-                    NotiHeader = "New meeting",
-                    NotiBody = "New meeting invitation from",
-                    IsRead = false,
-                    Url = "/Notifications/AllNotifications",
-                    CreatedDate = DateTime.Now,
-                    Message = "New invitation for meeting",
-                    FromUserName = user.FirstName,
-                    ToUserName = participant.Participant.FirstName
-                };
-                await _notificationService.AddNotification(newMeetingNotification);
+                    await SendNotifications(user, participant,"New meeting","New meeting invitation from:","You have new meeting invitation");
+                }
             }
 
 
@@ -93,6 +86,26 @@ namespace Meetinger.Controllers
 
             return View("CreatedMeeting", createdMeeting);
         }
+
+        private async Task SendNotifications(ApplicationUser user,MeetingParticipant participant,string notiHeader,string notiBody,string message)
+        {
+            var newMeetingNotification = new Notification
+            {
+                // NotiId = Guid.NewGuid(),
+                FromUserId = user.Id,
+                ToUserId = participant.ParticipantId,
+                NotiHeader = "New meeting",
+                NotiBody = "New meeting invitation from",
+                IsRead = false,
+                Url = "/Notifications/AllNotifications",
+                CreatedDate = DateTime.Now,
+                Message = "New invitation for meeting",
+                FromUserName = string.Concat(user.FirstName, " ", user.LastName),
+                ToUserName = string.Concat(participant.Participant.FirstName, " ", participant.Participant.LastName)
+            };
+            await _notificationService.AddNotification(newMeetingNotification);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> AddParticipant(string userId, Guid meetingId)
@@ -118,6 +131,7 @@ namespace Meetinger.Controllers
 
         public async Task<IActionResult> MyMeetings()
         {
+           // SendEmail();
             var userId = _userManager.GetUserId(User);
             var user = await _userManager.FindByIdAsync(userId);
             var myMeetings = _meetingService.GetByUser(user);
@@ -147,8 +161,21 @@ namespace Meetinger.Controllers
             await _context.SaveChangesAsync();
         }
 
+        [HttpPost]
         public async Task CancelMeeting(Guid meetingId)
         {
+            var userId = _userManager.GetUserId(User);
+            var user = await _userManager.FindByIdAsync(userId);
+            var meetingToCancel = _meetingService.GetById(meetingId);
+
+            foreach (var participant in meetingToCancel.Participants)
+            {
+                if (participant.Participant != user)
+                {
+                    await SendNotifications(user, participant, "Meeting canceled", "Meeting canceled by:", "Your meeting have been canceled");
+                }
+            }
+
             await _meetingService.CancelMeeting(meetingId);
         }
 
@@ -162,6 +189,8 @@ namespace Meetinger.Controllers
         [HttpPost]
         public async Task UpdateMeetingTask(Guid Id, Meeting meeting, List<string> selectedUsers)
         {
+            var userId = _userManager.GetUserId(User);
+            var user = await _userManager.FindByIdAsync(userId);
             var ThisParticipants = new List<MeetingParticipant>();
             foreach (var userI in selectedUsers)
             {
@@ -183,7 +212,56 @@ namespace Meetinger.Controllers
                 }
             }
 
+            foreach (var participant in ThisParticipants)
+            {
+                if (participant.Participant != user)
+                {
+                    await SendNotifications(user, participant, "Meeting update", "Meting updated by:", "Your meeting have been updated");
+                }
+            }
+
+
             await _meetingService.Update(Id, meeting);
         }
+        private void SendEmail()
+        {
+            // Create a new MailMessage instance
+            MailMessage mail = new MailMessage();
+
+            // Set the sender's and recipient's email addresses
+            mail.From = new MailAddress("meetinger845@gmail.com");
+            mail.To.Add("meetinger845@gmail.com");
+
+            // Set the subject and body of the email
+            mail.Subject = "Hello from ASP.NET MVC!";
+            mail.Body = "This is the content of the email.";
+
+            // Create a new SmtpClient instance
+            SmtpClient smtpClient = new SmtpClient();
+
+            // Set the SMTP server and port number
+            smtpClient.Host = "smtp.gmail.com";
+            smtpClient.Port = 587;
+
+            // Set your credentials for authenticating to the SMTP server (if required)
+            smtpClient.Credentials = new NetworkCredential("meetinger845@gmail.com", "Abcd123@");
+
+            // Enable SSL encryption if necessary
+            smtpClient.EnableSsl = true;
+
+            try
+            {
+                // Send the email
+                smtpClient.Send(mail);
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that occurred during sending
+                // Log the error or perform any necessary actions
+                // You may also choose to throw the exception to propagate it to the calling method
+                throw ex;
+            }
+        }
+
     }
 }

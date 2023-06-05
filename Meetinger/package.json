@@ -17,13 +17,17 @@
     "babel-loader": "^9.1.2",
     "babel-polyfill": "^6.26.0",
     "browser-sync-webpack-plugin": "^2.3.0",
+    "css-loader": "^6.8.1",
+    "style-loader": "^3.3.3",
     "webpack": "^5.84.1",
     "webpack-cli": "^5.1.1",
     "webpack-notifier": "^1.15.0"
   },
   "dependencies": {
+    "jquery": "^3.7.0",
     "particles-bg": "^2.5.5",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-ga": "^3.3.1"
   }
 }

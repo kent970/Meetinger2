@@ -16,7 +16,7 @@ namespace Meetinger.Services
 
         public List<Notification> GetNotifications(ApplicationUser user, bool bIsGetOnlyUnread)
         {
-            return _context.Notifications.Where(noti => noti.ToUserId == user.Id).ToList();
+            return _context.Notifications.Where(noti => noti.ToUserId == user.Id).  ToList();
         }
 
         public async Task AddNotification(Notification notification)

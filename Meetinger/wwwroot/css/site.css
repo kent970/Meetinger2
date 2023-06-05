@@ -1,5 +1,6 @@
 html {
   font-size: 14px;
+    
 }
 
 @media (min-width: 768px) {
@@ -9,25 +10,155 @@ html {
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100vh;
+   
 }
-
+.card {
+    background-color: #b2abf2;
+    border-radius: 20px; /* Add rounded borders */
+    padding: 10px 20px;
+    color: black;
+}
+.expired {
+    background: #E58C8A;
+    border-radius: 20px; /* Add rounded borders */
+    padding: 10px 20px;
+    color: black;
+    border: 1px solid rgba(0, 0, 0, 0.9);
+}
+.goingOn {
+    background: forestgreen;
+    border-radius: 20px; /* Add rounded borders */
+    padding: 10px 20px;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 255.9);
+}
+.navbar-btn {
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-width: 1px;
+    margin: 2px;
+    color: #ffffff; /* Set the initial text color */
+    transition: background-color 0.7s;
+    border-radius: 20px; /* Add rounded borders */
+    padding: 10px 20px;
+}
+    .navbar-btn:hover {
+        background-color: #5f4bb6; /* Change the background color on hover */
+        color: #ffffff;
+    }
+header {
+    background-color: #5f4bb6;
+}
 body {
-  margin-bottom: 60px;
+    background-color: #555555;
 }
-.container {
-    text-align: center;
-    margin-top: 100px;
+.scrollable-list {
+    height: 78vh;
+    overflow: auto;
+    border: 1px; /* Add border styles */
+    padding: 10px;
+}
+.participant-list {
+    height: 200px; /* Adjust the height as per your requirements */
+    overflow: auto;
+    border: 1px solid #000000; /* Add border styles */
+    padding: 10px; /* Add padding to create space between the border and the list */
+}
+.available-users {
+    height: 200px; /* Adjust the height as per your requirements */
+
+    overflow: auto;
+    border: 1px; /* Add border styles */
+    padding: 10px;
+}
+.name-label {
+    height: 30px;
+    background-color: #DEDAFF; /* Set the background color */
+    color: #000000; /* Set the text color */
+    border: 1px solid #cccccc; /* Set the border */
+    border-radius: 5px; /* Add rounded borders */
+    padding: 10px;
+    margin: 2px;
+}
+    .name-label:focus {
+        color: #000000;
+        border: 2px solid #5f4bb6;
+    }
+
+.desc-label {
+    background-color: #DEDAFF; /* Set the background color */
+    color: #000000; /* Set the text color */
+    border: 1px solid #cccccc; /* Set the border */
+    border-radius: 5px; /* Add rounded borders */
+    padding: 10px;
+}
+    .desc-label:focus {
+        color: #000000;
+        border: 2px solid #5f4bb6;
+    }
+.custom-title {
+  color: black;
+  font-size: 24px;
+  margin-bottom: 20px;
 }
 
-.title {
-    font-size: 32px;
-    color: #333;
-    margin-bottom: 20px;
+.custom-label {
+  color: black;
+  font-weight: bold;
 }
 
-.description {
-    font-size: 18px;
-    color: #666;
+.custom-input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.custom-textarea {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  height: 120px;
+}
+
+.custom-button {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.custom-button:hover { background-color: #c82333; }
+.submit-button {
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-width: 1px;
+    margin: 2px;
+    color: black; 
+    transition: background-color 0.7s;
+    transition: color 0.7s;
+    border-radius: 20px; 
+    padding: 10px 20px;
+}
+.main-button {
+    background-color: #5f4bb6;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-width: 1px;
+    margin: 2px;
+    border-radius: 20px;
+    padding: 10px 20px;
+}
+.submit-button:hover {
+        background-color: #5f4bb6;
+        color: white;
+    }
+.meeting-actions {
+    color: black;
+    margin: 4px;
 }

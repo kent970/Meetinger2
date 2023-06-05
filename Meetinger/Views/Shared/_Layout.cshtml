@@ -6,46 +6,64 @@
     <title>@ViewData["Title"] - Meetinger</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Meetinger.styles.css" asp-append-version="true" />
-
+    <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="~/notification/ikr.notification.css" rel="stylesheet" />
+    <!-- CSS -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <!-- JS -->
+    <script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .w3-bar-item,
+        .w3-button {
+            color: black;
+            /* Add any other desired styles */
+        }
+    </style>
+
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Meetinger</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Meeting" asp-action="NewMeeting">Create new meeting</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Meeting" asp-action="AllMeetings">See meetings</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Meeting" asp-action="MyMeetings">My meetings</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Notifications" asp-action="AllNotifications">All notifications</a>
-                        </li>
-                </ul>
+        <nav class="navbar navbar-expand-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Meetinger</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <button class="navbar-btn">
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </button>
+                        <button class="navbar-btn">
+                            <a class="nav-link text-white" asp-area="" asp-controller="Meeting" asp-action="NewMeeting">Create new meeting</a>
+                        </button>
+                        @* <button class="navbar-btn"> *@
+                        @*     <a class="nav-link text-white" asp-area="" asp-controller="Meeting" asp-action="AllMeetings">See meetings</a> *@
+                        @* </button> *@
+                        @* <button class="navbar-btn"> *@
+                        @*     <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> *@
+                        @* </button> *@
+                        <button class="navbar-btn">
+                            <a class="nav-link text-white" asp-area="" asp-controller="Meeting" asp-action="MyMeetings">My meetings</a>
+                        </button>
+                        <button class="navbar-btn">
+                            <a class="nav-link text-white" asp-area="" asp-controller="Notifications" asp-action="AllNotifications">All notifications</a>
+                        </button>
+                    </ul>
                     <div id="noti_Container"></div>
+                </div>
+                <partial name="_LoginPartial" />
             </div>
-            <partial name="_LoginPartial"/>
-        </div>
-    </nav>
+        </nav>
+
 </header>
 <div class="container">
     <main role="main" class="pb-3">
@@ -66,7 +84,7 @@
 </body>
 </html>
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $("#noti_Container").ikrNotificationSetup();
         $.ajax({
             type: "GET",
@@ -74,7 +92,7 @@
             url: "/Notifications/GetNotifications",
             traditional: true,
             contentType: "application/json;charset=utf-8",
-            success: function(data) {
+            success: function (data) {
                 var notifications = data;
                 $("#noti_Container").ikrNotificationCount({
                     NotificationList: notifications,
@@ -85,9 +103,10 @@
                     ActionName: "AllNotifications"
                 });
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
 
             }
         });
     });
 </script>
+

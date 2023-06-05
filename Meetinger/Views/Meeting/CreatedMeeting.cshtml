@@ -5,25 +5,39 @@
     ViewData["Name"] = "Meeting";
 }
 
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="meeting-container">
+                        <h1>Scheduled Meeting</h1>
 
-<h1>Scheduled Meeting</h1>
-
-<dl>
-    <dt>Id</dt>
-    <dd>@Model.MeetingTime</dd>
-    <dt>Data</dt>
-    <dd>@Model.EndTime</dd>
-    <dt>Name</dt>
-    <dd>@Model.Name</dd>
-    <dt>Description</dt>
-    <dd>@Model.Description</dd>
-</dl>
-
-@foreach (var user in Model.Participants)
-{
-    <div class="participant-name">
-        @user.Participant.FirstName
+                        <dl>
+                            <dt>Id</dt>
+                            <dd>@Model.MeetingTime</dd>
+                            <dt>Data</dt>
+                            <dd>@Model.EndTime</dd>
+                            <dt>Name</dt>
+                            <dd>@Model.Name</dd>
+                            <dt>Description</dt>
+                            <dd>@Model.Description</dd>
+                        </dl>
+                        <h3>Participants</h3>
+                        @foreach (var user in Model.Participants)
+                        {
+                            if (user.Participant != @Model.Creator)
+                            {
+                                <div class="participant-name">
+                                    <h5>@user.Participant.FirstName @user.Participant.LastName</h5>
+                                </div>
+                            }
+                        }
+                        <h3>Creator</h3>
+                        <h5>@Model.Creator.FirstName @Model.Creator.LastName</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-}
-
-<p class="creator-username">@Model.Creator.UserName</p>
+</div>

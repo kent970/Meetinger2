@@ -1,11 +1,15 @@
 ﻿import React from 'react';
-import ParticlesBg from "particles-bg";
+import './App.css';
+import Header from './Components/Header';
 
 function App() {
     return (
     <div className="container">
-        <h1 className="title">Welcome to the Meeting Scheduling 22System!</h1>
-        <p className="description">Let's schedule and manage your meetings efficiently.</p>
+            
+
+        <h1 className="title">Welcome to the Meeting Scheduling System!</h1>
+            <p className="description">Let's schedule and manage your meetings efficiently.</p>
+<Header /> 
         </div>
 );
 }

@@ -15,7 +15,7 @@ namespace Meetinger.Services
 
         public Meeting? GetById(Guid id)
         {
-            return _context.Meetings.FirstOrDefault(meeting => meeting.Id == id);
+            return _context.Meetings.Where(m=>m.Id==id).Include(m=>m.Participants).ThenInclude(m=>m.Participant).   FirstOrDefault();
         }
 
         public async Task Add(Meeting meeting)
@@ -32,7 +32,7 @@ namespace Meetinger.Services
         public IEnumerable<Meeting> GetByUser(ApplicationUser user)
         {
             var meetings = _context.Meetings.Include(m => m.Participants).ThenInclude(p => p.Participant)
-                .Where(m => m.Participants.Any(mp => mp.Participant == user)).ToList();
+                .Where(m => m.Participants.Any(mp => mp.Participant == user)).OrderByDescending(m=>m.MeetingTime). ToList();
             return meetings;
         }
 
@@ -51,11 +51,11 @@ namespace Meetinger.Services
 
         public async Task CancelMeeting(Guid meetingId)
         {
-            var meetingToCancel = await _context.Meetings.FirstOrDefaultAsync(m => m.Id == meetingId);
-
-            if (meetingToCancel != null)
+            
+            if (meetingId != null)
             {
-                meetingToCancel.IsCanceled = true;
+                _context.Meetings.FirstOrDefault(m => m.Id==meetingId).IsCanceled=true;
+               // meetingToCancel.IsCanceled = true;
                 await _context.SaveChangesAsync();
             }
             else

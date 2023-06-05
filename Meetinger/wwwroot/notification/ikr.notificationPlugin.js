@@ -1,11 +1,8 @@
 (function ($) {
     // ****** Add ikr.notification.css ******
     $.fn.ikrNotificationSetup = function (options) {
-        /*
-          Declaration : $("#noti_Container").ikrNotificationSetup({
-                    List: objCollectionList
-          });
-       */
+
+       
         var defaultSettings = $.extend({
             BeforeSeenColor: "#2E467C",
             AfterSeenColor: "#ccc"
@@ -56,16 +53,7 @@
         }
     };
     $.fn.ikrNotificationCount = function (options) {
-        /*
-          Declaration : $("#myComboId").ikrNotificationCount({
-                    NotificationList: [],
-                    NotiFromPropName: "",
-                    ListTitlePropName: "",
-                    ListBodyPropName: "",
-                    ControllerName: "Notifications",
-                    ActionName: "AllNotifications"
-          });
-       */
+
         var defaultSettings = $.extend({
             NotificationList: [],
             NotiFromPropName: "",
@@ -101,6 +89,51 @@
                 });
             }
         }
+        ///////
+        var parentId = $(this).attr("id");
+        if ($.trim(parentId) != "" && parentId.length > 0) {
+            $("#" + parentId + " .ikrNotifications .ikrSeeAll").click(function () {
+                window.open('../' + defaultSettings.ControllerName + '/' + defaultSettings.ActionName + '', '_blank');
+            });
+
+            var totalUnReadNoti = defaultSettings.NotificationList.filter(x => x.isRead == false).length;
+            $('#' + parentId + ' .ikrNoti_Counter').text(totalUnReadNoti);
+            $('#' + parentId + ' .notiCounterOnHead').text(totalUnReadNoti);
+            if (defaultSettings.NotificationList.length > 0) {
+                $.map(defaultSettings.NotificationList, function (item) {
+                    var className = item.isRead ? "" : " ikrSingleNotiDivUnReadColor";
+                    var sNotiFromPropName = $.trim(defaultSettings.NotiFromPropName) == "" ? "" : item[ikrLowerFirstLetter(defaultSettings.NotiFromPropName)];
+                    $("#" + parentId + " .ikrNotificationItems").append("<div class='ikrSingleNotiDiv" + className + "' notiId=" + item.notiId + ">" +
+                        "<h4 class='ikrNotiFromPropName'>" + sNotiFromPropName + "</h4>" +
+                        "<h5 class='ikrNotificationTitle'>" + item[ikrLowerFirstLetter(defaultSettings.ListTitlePropName)] + "</h5>" +
+                        "<div class='ikrNotificationBody'>" + item[ikrLowerFirstLetter(defaultSettings.ListBodyPropName)] + "</div>" +
+                        "<div class='ikrNofiCreatedDate'>" + item.createdDateSt + "</div>" +
+                        "</div>");
+
+                    $("#" + parentId + " .ikrNotificationItems .ikrSingleNotiDiv[notiId=" + item.notiId + "]").click(function () {
+                        if ($.trim(item.url) != "") {
+                            window.location.href = item.url;
+                        }
+
+                        // Make an AJAX request to mark the notification as read
+                        $.ajax({
+                            url: "/Notifications/MarkAsRead", // Replace with the actual endpoint URL in your application
+                            method: "POST",
+                            data: { notiId: item.notiId },
+                            success: function () {
+                                // Update the UI to reflect that the notification has been marked as read
+                                $("#" + parentId + " .ikrSingleNotiDiv[notiId=" + item.notiId + "]").removeClass("ikrSingleNotiDivUnReadColor");
+                            },
+                            error: function (error) {
+                                console.log(error);
+                            }
+                        });
+                    });
+                });
+            }
+        }
+        ///////
+
     };
 }(jQuery));
 

@@ -1,42 +1,62 @@
 ﻿@model Meeting
 
-<h1>Create New Meeting</h1>
+
 
 @if (User.Identity.IsAuthenticated)
 {
-    <div class="row">
-        <form asp-action="CreateMeeting" method="post" id="addPostForm">
-            <div class="form-group">
-                <label asp-for="MeetingTime">Meeting Time</label>
-                <input asp-for="MeetingTime" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="EndTime">End Time</label>
-                <input asp-for="EndTime" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Name">Name</label>
-                <textarea asp-for="Name" class="form-control"></textarea>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description">Description</label>
-                <textarea asp-for="Description" class="form-control"></textarea>
-                <input asp-for="Id" type="hidden" />
-            </div>
-            <div class="form-group">
-                <label asp-for="AvailableUsers">Available Users</label>
-                @foreach (var user in Model.AvailableUsers)
-                {
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="@user.Id" name="selectedUsers" value="@user.Id">
-                        <label class="form-check-label" for="@user.Id">@user.FirstName</label>
-                    </div>
-                }
-            </div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="custom-title">Create New Meeting</h1>
+                    <form asp-action="CreateMeeting" method="post" id="addPostForm">
+                        <div class="form-group">
+                            <label asp-for="MeetingTime" class="custom-label">Meeting Time</label>
+                                <input asp-for="MeetingTime" class="form-control name-label" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EndTime" class="custom-label">End Time</label>
+                                <input asp-for="EndTime" class="form-control name-label" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Name" class="custom-label">Name</label>
+                                <textarea asp-for="Name" class="form-control name-label"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Description" class="custom-label">Description</label>
+                            <textarea asp-for="Description" class="form-control desc-label"></textarea>
+                            <input asp-for="Id" type="hidden" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="AvailableUsers" class="custom-label">Available Users</label>
+                        <div class="scrollable-list available-users">
+                            @foreach (var user in Model.AvailableUsers)
+                            {
+                                if (user.Email == Context.User.Identity.Name)
+                                {
+                                    //<span>Creator: @meeting.Creator.FirstName</span>
+                                }
+                                else
+                                {
+                                  <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="@user.Id" name="selectedUsers" value="@user.Id">
+                                    <label class="form-check-label" for="@user.Id">@user.FirstName @user.LastName @user.Email</label>
+                                </div>  
+                                }
+                                
 
-            <button type="submit" id="submitPostBtn" class="btn btn-danger">Submit Meeting</button>
-        </form>
+                            }
+                        </div>
+                            </div>
+
+                        <button type="submit" class="btn submit-button">Submit Meeting</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 }
 else
 {

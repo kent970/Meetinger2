@@ -1,41 +1,115 @@
-﻿<script src="~/lib/jquery/dist/jquery.min.js"></script>
+﻿<style>
+    /* Table Styles */
+    #tblNotification {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        #tblNotification th,
+        #tblNotification td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        #tblNotification th {
+            background-color: #f5f5f5;
+        }
+     
+</style>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+
+<div class="container">
+<div class="row justify-content-center">
+<div class="col-lg-6">
+<div class="card">
+<div class="card-body">
 <table id="tblNotification" class="table table-bordered table-striped">
     <thead>
-    <tr>
-        <th>From</th>
-        <th>title</th>
-        <th>Detail</th>
-        <th>Isread</th>
-        <th>Noti date time</th>
-    </tr>
+        <tr>
+            <th>From</th>
+            <th>Title</th>
+            <th>Detail</th>
+            <th>Is Read</th>
+            <th>Notification Date</th>
+        </tr>
     </thead>
     <tbody>
-
     </tbody>
-
 </table>
+
+<button id="btnMarkAllAsRead" class="submit-button">Mark All as Read</button>
+
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $.ajax({
             type: "GET",
             dataType: "json",
             url: "/Notifications/GetNotifications",
             traditional: true,
             contentType: "application/json;charset=utf-8",
-            success: function(data) {
+            success: function (data) {
                 var notifications = data;
-                $.map(notifications,
-                    function(notification) {
-                        $("#tblNotification tbody").append("<tr>" + "<td>" + notification.fromUserName + "</td>" + "<td>" + notification.notiHeader + "</td>" + "<td>" + notification.notiBody + "</td>" + "<td>" + notification.isReadSt + "</td>" + "<td>" + notification.createdDateSt + "</td>" + "</tr>");
-                    });
+                $.map(notifications, function (notification) {
+                    $("#tblNotification tbody").append("<tr>" +
+                        "<td>" + notification.fromUserName + "</td>" +
+                        "<td>" + notification.notiHeader + "</td>" +
+                        "<td>" + notification.notiBody + "</td>" +
+                        "<td>" + notification.isReadSt + "</td>" +
+                        "<td>" + notification.createdDateSt + "</td>" +
+                        "</tr>");
+                });
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
 
             }
-        })
-    })
+        });
 
+        $("#btnMarkAllAsRead").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "/Notifications/MarkAllAsRead",
+                success: function () {
+                    // Reload the notifications table
+                    loadNotifications();
+                },
+                error: function (xhr, status, error) {
 
+                }
+            });
+        });
 
-</script>
+        function loadNotifications() {
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "/Notifications/GetNotifications",
+                traditional: true,
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    $("#tblNotification tbody").empty();
+                    var notifications = data;
+                    $.map(notifications, function (notification) {
+                        $("#tblNotification tbody").append("<tr>" +
+                            "<td>" + notification.fromUserName + "</td>" +
+                            "<td>" + notification.notiHeader + "</td>" +
+                            "<td>" + notification.notiBody + "</td>" +
+                            "<td>" + notification.isReadSt + "</td>" +
+                            "<td>" + notification.createdDateSt + "</td>" +
+                            "</tr>");
+                    });
+                },
+                error: function (xhr, status, error) {
 
+                }
+            });
+        }
+    });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
