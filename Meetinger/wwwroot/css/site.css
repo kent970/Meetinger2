@@ -1,3 +1,6 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+}
 html {
   font-size: 14px;
     
@@ -16,20 +19,20 @@ html {
 }
 .card {
     background-color: #b2abf2;
-    border-radius: 20px; /* Add rounded borders */
+    border-radius: 20px;
     padding: 10px 20px;
     color: black;
 }
 .expired {
     background: #E58C8A;
-    border-radius: 20px; /* Add rounded borders */
+    border-radius: 20px; 
     padding: 10px 20px;
     color: black;
     border: 1px solid rgba(0, 0, 0, 0.9);
 }
 .goingOn {
     background: forestgreen;
-    border-radius: 20px; /* Add rounded borders */
+    border-radius: 20px; 
     padding: 10px 20px;
     color: white;
     border: 1px solid rgba(255, 255, 255, 255.9);
@@ -39,13 +42,13 @@ html {
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-width: 1px;
     margin: 2px;
-    color: #ffffff; /* Set the initial text color */
+    color: #ffffff;
     transition: background-color 0.7s;
-    border-radius: 20px; /* Add rounded borders */
+    border-radius: 20px; 
     padding: 10px 20px;
 }
     .navbar-btn:hover {
-        background-color: #5f4bb6; /* Change the background color on hover */
+        background-color: #5f4bb6; 
         color: #ffffff;
     }
 header {
@@ -57,28 +60,28 @@ body {
 .scrollable-list {
     height: 78vh;
     overflow: auto;
-    border: 1px; /* Add border styles */
+    border: 1px; 
     padding: 10px;
 }
 .participant-list {
-    height: 200px; /* Adjust the height as per your requirements */
+    height: 200px; 
     overflow: auto;
-    border: 1px solid #000000; /* Add border styles */
-    padding: 10px; /* Add padding to create space between the border and the list */
+    border: 1px solid #000000; 
+    padding: 10px; 
 }
 .available-users {
-    height: 200px; /* Adjust the height as per your requirements */
+    height: 200px; 
 
     overflow: auto;
-    border: 1px; /* Add border styles */
+    border: 1px; 
     padding: 10px;
 }
 .name-label {
     height: 30px;
-    background-color: #DEDAFF; /* Set the background color */
-    color: #000000; /* Set the text color */
-    border: 1px solid #cccccc; /* Set the border */
-    border-radius: 5px; /* Add rounded borders */
+    background-color: #DEDAFF;
+    color: #000000; 
+    border: 1px solid #cccccc; 
+    border-radius: 5px; 
     padding: 10px;
     margin: 2px;
 }
@@ -88,10 +91,10 @@ body {
     }
 
 .desc-label {
-    background-color: #DEDAFF; /* Set the background color */
-    color: #000000; /* Set the text color */
-    border: 1px solid #cccccc; /* Set the border */
-    border-radius: 5px; /* Add rounded borders */
+    background-color: #DEDAFF; 
+    color: #000000; 
+    border: 1px solid #cccccc; 
+    border-radius: 5px; 
     padding: 10px;
 }
     .desc-label:focus {
@@ -143,6 +146,28 @@ body {
     transition: background-color 0.7s;
     transition: color 0.7s;
     border-radius: 20px; 
+    padding: 10px 20px;
+}
+.good-button {
+    background-color: green;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-width: 1px;
+    margin: 2px;
+    color: black;
+    transition: background-color 0.7s;
+    transition: color 0.7s;
+    border-radius: 20px;
+    padding: 10px 20px;
+}
+.angry-button {
+    background-color: red;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-width: 1px;
+    margin: 2px;
+    color: black;
+    transition: background-color 0.7s;
+    transition: color 0.7s;
+    border-radius: 20px;
     padding: 10px 20px;
 }
 .main-button {

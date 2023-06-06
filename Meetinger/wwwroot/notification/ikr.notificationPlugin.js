@@ -111,9 +111,9 @@
                         "</div>");
 
                     $("#" + parentId + " .ikrNotificationItems .ikrSingleNotiDiv[notiId=" + item.notiId + "]").click(function () {
-                        if ($.trim(item.url) != "") {
-                            window.location.href = item.url;
-                        }
+//                        if ($.trim(item.url) != "") {
+//                            window.location.href = item.url;
+//                        }
 
                         // Make an AJAX request to mark the notification as read
                         $.ajax({

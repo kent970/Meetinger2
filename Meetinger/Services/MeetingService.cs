@@ -95,5 +95,10 @@ namespace Meetinger.Services
             meetingToUpdate.EndTime = meeting.EndTime;
             await _context.SaveChangesAsync();
         }
+
+        public IEnumerable<Meeting> MeetingsToStart()
+        {
+            return _context.Meetings.Where(m => m.MeetingTime <= DateTime.Now && m.IsCanceled == false).ToList();
+        }
     }
 }

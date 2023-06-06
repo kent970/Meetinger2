@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Mail;
+using Hangfire;
 using Meetinger.Areas.Identity.Data;
 using Meetinger.Models;
 using Meetinger.Services;
@@ -223,42 +224,50 @@ namespace Meetinger.Controllers
 
             await _meetingService.Update(Id, meeting);
         }
+
+        private void CheckMeetingStart()
+        {
+            RecurringJob.AddOrUpdate(() => ProcessMeetingStart(), Cron.Minutely);
+        }
+
+        public async Task ProcessMeetingStart()
+        {
+            var meetingsToStart = _meetingService.MeetingsToStart();
+            foreach (var meeting in meetingsToStart)
+            {
+                foreach (var user in meeting.Participants)
+                {
+                    await SendNotifications(meeting.Creator, user, "Meeting started", "Your meeting has started",
+                        "Meeting started");
+                }
+            }
+        }
         private void SendEmail()
         {
-            // Create a new MailMessage instance
+          
             MailMessage mail = new MailMessage();
 
-            // Set the sender's and recipient's email addresses
             mail.From = new MailAddress("meetinger845@gmail.com");
             mail.To.Add("meetinger845@gmail.com");
 
-            // Set the subject and body of the email
             mail.Subject = "Hello from ASP.NET MVC!";
             mail.Body = "This is the content of the email.";
 
-            // Create a new SmtpClient instance
             SmtpClient smtpClient = new SmtpClient();
 
-            // Set the SMTP server and port number
             smtpClient.Host = "smtp.gmail.com";
             smtpClient.Port = 587;
 
-            // Set your credentials for authenticating to the SMTP server (if required)
             smtpClient.Credentials = new NetworkCredential("meetinger845@gmail.com", "Abcd123@");
 
-            // Enable SSL encryption if necessary
             smtpClient.EnableSsl = true;
 
             try
             {
-                // Send the email
                 smtpClient.Send(mail);
             }
             catch (Exception ex)
             {
-                // Handle any exceptions that occurred during sending
-                // Log the error or perform any necessary actions
-                // You may also choose to throw the exception to propagate it to the calling method
                 throw ex;
             }
         }

@@ -58,6 +58,14 @@
                                                     else
                                                     {
                                                         <h5>@mp.Participant.FirstName @mp.Participant.LastName</h5>
+                                                        if (mp.AttendanceStatus)
+                                                        {
+                                                            <p class="good-button">Will attend</p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p class="angry-button">Will not attend</p>
+                                                        }
                                                     }
                                                 }
                                             </div>

@@ -6,6 +6,8 @@ using Meetinger.Models;
 using React.AspNet;
 using JavaScriptEngineSwitcher.V8;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
+using Hangfire;
+using Hangfire.SqlServer;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +26,11 @@ builder.Services.AddScoped<List<Notification>>(_ => new List<Notification>());
 builder.Services.AddScoped<INotification, NotificationService>();
 builder.Services.AddReact();
 builder.Services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName).AddV8();
+builder.Services.AddHangfire(config =>
+{
+    config.UseSqlServerStorage(connectionString);
+});
+
 
 
 var app = builder.Build();
@@ -43,6 +50,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseStaticFiles();
 
+app.UseHangfireServer();
+app.UseHangfireDashboard();
 
 app.UseRouting();
 app.UseAuthentication();;

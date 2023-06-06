@@ -15,7 +15,8 @@ namespace Meetinger.Services
         Task AddParticipant(Meeting meeting, ApplicationUser user);
         MeetingParticipant GetMeetingAttendant(Meeting meeting,ApplicationUser user);
         Task Update(Guid id, Meeting meeting);
-       
 
+
+        IEnumerable<Meeting> MeetingsToStart();
     }
 }
